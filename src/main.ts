@@ -52,10 +52,12 @@ function createConfig() {
         channels: []
     };
 
-    writeFileSync(configPath, JSON.stringify(newConfig));
+    try {
+        writeFileSync(configPath, JSON.stringify(newConfig));
+    } catch {
+        console.log("An error occurred while creating config!")
+    }
     config = newConfig;
-    // TODO: updateConfig
-
 }
 
 const bot = new Client();

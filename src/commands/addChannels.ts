@@ -1,4 +1,5 @@
 import { Message } from 'discord.js';
+import { type } from 'os';
 import { Config, getConfig, updateConfig } from '../main';
 
 export default function addChannels(args: string[], msg: Message): number {
@@ -16,9 +17,20 @@ export default function addChannels(args: string[], msg: Message): number {
     args.forEach(arg => {
         console.log(arg);
         if (!isNaN(Number(arg)) && Number(arg) !== 0) {
+            const channel = msg.guild.channels.cache.get(arg);
+            if (typeof (channel) === "undefined") {
+                msg.channel.send(arg + " <- this channel does not exist :expressionless:");
+                return 0;
+            }
             config.channels.push(arg);
         } else {
-            msg.channel.send(arg + " <- this isn't a channel ID :expressionless:");
+            const channel = msg.guild.channels.cache.find((channel, _) => channel.name === arg);
+            if (typeof channel !== "undefined") {
+                config.channels.push(channel.id);
+                return 0;
+            }
+            msg.channel.send(arg + " <- this channel does not exist :expressionless:");
+            return 0;
         }
     });
 

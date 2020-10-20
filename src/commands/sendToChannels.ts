@@ -16,7 +16,7 @@ export default function sendToChannels(args: string[], msg: Message): number {
     config.channels.forEach(channelId => {
         const channel = msg.guild.channels.cache.get(channelId);
         if (channel && channel instanceof TextChannel) {
-            channel.send(args[0] + "\n `Author: " + msg.author.username + "`");
+            channel.send(args.join(" ") + "\n `Author: " + msg.author.username + "`");
         } else {
             msg.channel.send("The Channel with the id: " + channelId + " was not found");
         }

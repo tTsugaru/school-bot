@@ -1,5 +1,8 @@
 import { Message } from 'discord.js';
+import { cpuUsage } from 'process';
 import addChannels from './commands/addChannels';
+import listChannels from './commands/listChannels';
+import removeChannels from './commands/removeChannels';
 import sendToChannels from './commands/sendToChannels';
 
 export default class Command {
@@ -16,6 +19,8 @@ export default class Command {
 }
 
 export const commands = [
-    new Command("addChannels", ["ac"], addChannels),
-    new Command("sendToChannels", ["stc", "send"], sendToChannels)
+    new Command("addChannels", ["ac", "add"], addChannels),
+    new Command("sendToChannels", ["stc", "send"], sendToChannels),
+    new Command("removeChannels", ["rc", "remove"], removeChannels),
+    new Command("listChannels", ["lc", "ls", "list"], listChannels) 
 ];
