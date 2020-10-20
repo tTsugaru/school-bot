@@ -114,6 +114,7 @@ bot.on('message', message => {
 
         commandFound = true
         const retNumber = cmd.invoke(args, message);
+        console.log(`The User ${message.author.username} (${message.author.id}) executed the command "${cmd.name}" with this args -> ${args.length > 0 ? args : "[]"}`);
         if (retNumber === 1) {
             bot.destroy();
         }
