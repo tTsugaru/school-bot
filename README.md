@@ -1,37 +1,25 @@
-# School Bot
-
-
 [![GitHub](https://img.shields.io/github/license/Rushifaaa/school-bot?style=flat-square)](./LICENSE)
 [![GitHub contributors](https://img.shields.io/github/contributors/Rushifaaa/school-bot?style=flat-square)](https://github.com/Rushifaaa/school-bot/graphs/contributors)
 [![GitHub issues](https://img.shields.io/github/issues/Rushifaaa/school-bot?style=flat-square)](https://github.com/Rushifaaa/school-bot/issues)
 [![Discord](https://img.shields.io/discord/508727953350328320?style=flat-square)](https://discord.gg/kFqWZtv)
+<p align="center">
+  <h3 align="center">School Bot</h3>
+</p>
 
 ## Table of Contents
-* [About the Project](#about-the-project)
-* [How to Setup](#how-to-setup)
+* [Setup](#setup)
 * [License](#license)
 * [Contact](#contact)
 
-
-## About the Project
-Everyone knows the Assistants like "Alexa", "Google Assistant", ... They are boring.
-I am trying to make an Assistant that can learn from what you say and dont repeat every sentence a thousend times.
-This Assistant should also have an own Personality, but be carefull the personality depends on how you talk to him.
-
-*Please note that I am new at this Machine Learning and AI stuff. :)<br/>
-
-
-## Why "Mogwai"?
-Mogwai is a name of an AI from an Anime (Strike the Blood) and means <br/>
-"According to Chinese tradition, mogwai are certain demons, which often inflict harm on humans." - [Wikipedia](https://en.wikipedia.org/wiki/Mogwai_(Chinese_culture)), so I thought thats a good name for an Assistant, let's take that one.
-
+## Setup
+First you will need [yarn](https://yarnpkg.com/) or [npm](https://www.npmjs.com/)(comes with node).
+If you installed one of these then go to the root and execute `yarn install` or `npm i`.
+After that you need to start the Bot with `yarn start` or `npm start`.
+If you are starting for the first time it will create a config for you, please enter your Bot Token there with your desired prefix, after that the Bot should start without any problems.
 
 ## License
-
 Distributed under the GPL-3.0 License. See [`LICENSE`](./LICENSE) for more information.
 
 
 ## Contact
-
 You can contact me on [Discord](https://discord.gg/kFqWZtv)
-
