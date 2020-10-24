@@ -1,5 +1,5 @@
 import { Message, TextChannel } from 'discord.js';
-import { Config, getConfig, updateConfig } from '../main';
+import { getConfig } from '../main';
 
 export default function sendToChannels(args: string[], msg: Message): number {
     if (args.length <= 0) {

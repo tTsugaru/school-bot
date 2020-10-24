@@ -1,5 +1,4 @@
 import { Message } from 'discord.js';
-import { type } from 'os';
 import { Config, getConfig, updateConfig } from '../main';
 
 export default function addChannels(args: string[], msg: Message): number {

@@ -1,5 +1,4 @@
 import { Message } from "discord.js";
-import { type } from "os";
 import { Config, getConfig } from "../main";
 
 export default function listChannels(args: string[], msg: Message): number {

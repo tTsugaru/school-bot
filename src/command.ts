@@ -1,5 +1,4 @@
 import { Message } from 'discord.js';
-import { cpuUsage } from 'process';
 import addChannels from './commands/addChannels';
 import listChannels from './commands/listChannels';
 import removeChannels from './commands/removeChannels';
