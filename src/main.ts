@@ -4,6 +4,7 @@ import { exit } from 'process';
 import { commands } from './command';
 
 export interface Config {
+    botOwner: string,
     prefix?: string,
     token: string,
     channels: string[]
@@ -26,6 +27,7 @@ export function updateConfig(newConfig: Config) {
 export function getConfig(): Config | null {
     try {
         const emptyConfig: Config = {
+            botOwner: "",
             channels: [],
             token: "",
             prefix: null
@@ -47,6 +49,7 @@ export function getConfig(): Config | null {
 function createConfig() {
 
     const newConfig: Config = {
+        botOwner: "",
         token: "",
         prefix: null,
         channels: []
@@ -100,6 +103,10 @@ bot.once('ready', () => {
 
 bot.on('message', message => {
     if (!message.content.startsWith(config.prefix) || message.author.bot) return;
+    if (config.botOwner !== message.author.id) {
+        message.channel.send("You are not allowed to execute this command!");
+        return;
+    }
 
     let args = message.content.slice(config.prefix.length).trim().split(/ +/s);
     let commandName = args.shift();
