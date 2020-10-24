@@ -4,6 +4,9 @@
   "main": "index.js",
   "author": "Rushifaaa <jakubgencer@protonmail.com>",
   "license": "GPL-v3-or-later",
+  "scripts": {
+    "start": "ts-node src/main.ts"
+  },
   "dependencies": {
     "discord.js": "^12.3.1",
     "ts-node": "^9.0.0",
