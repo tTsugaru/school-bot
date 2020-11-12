@@ -1,69 +1,12 @@
 import { Client } from 'discord.js';
-import { readFileSync, writeFileSync } from 'fs';
 import { exit } from 'process';
 import { commands } from './command';
-
-export interface Config {
-    botOwner: string,
-    prefix?: string,
-    token: string,
-    channels: string[]
-}
-
-const configPath = `${__dirname}/../config.json`;
-let config = {} as Config;
-
-export function updateConfig(newConfig: Config) {
-    try {
-        writeFileSync(configPath, JSON.stringify(newConfig));
-        console.log("Successfully updated the config");
-        config = newConfig;
-    } catch (error) {
-        console.log("An error occurred while updating the config", error);
-        return;
-    }
-}
-
-export function getConfig(): Config | null {
-    try {
-        const emptyConfig: Config = {
-            botOwner: "",
-            channels: [],
-            token: "",
-            prefix: null
-        };
-
-        const loadedConfig: Config = JSON.parse(readFileSync(configPath).toString());
-
-        if (loadedConfig === emptyConfig) {
-            return null;
-        }
-
-        return loadedConfig ? loadedConfig : null;
-    } catch {
-        console.log("No Config was Found need to be created.")
-        return null;
-    }
-}
-
-function createConfig() {
-
-    const newConfig: Config = {
-        botOwner: "",
-        token: "",
-        prefix: null,
-        channels: []
-    };
-
-    try {
-        writeFileSync(configPath, JSON.stringify(newConfig));
-    } catch {
-        console.log("An error occurred while creating config!")
-    }
-    config = newConfig;
-}
+import { Config, BotConfig, getConfig, createConfig, getBotConfig, createBotConfig } from './config';
 
 const bot = new Client();
+
+let config: Config = {} as Config
+let botConfig: BotConfig = {} as BotConfig
 
 function startBot() {
     const loadedConfig = getConfig();
@@ -77,9 +20,8 @@ function startBot() {
         console.log("Please setup config");
         exit(0);
     }
-
-
     config = loadedConfig
+
     if (config.token === "") {
         console.log(loadedConfig);
         console.log("No token was found!");
@@ -91,6 +33,11 @@ function startBot() {
     } else {
         console.log("Starting bot.");
         bot.login(config.token);
+    }
+
+    let loadedBotConfig = getBotConfig();
+    if (loadedBotConfig === null) {
+        botConfig = createBotConfig();
     }
 }
 
@@ -107,6 +54,8 @@ bot.on('message', message => {
         message.channel.send("You are not allowed to execute this command!");
         return;
     }
+    botConfig = getBotConfig();
+    console.log(botConfig);
 
     let args = message.content.slice(config.prefix.length).trim().split(/ +/s);
     let commandName = args.shift();
@@ -120,7 +69,7 @@ bot.on('message', message => {
         if (cmd.name !== commandName && !cmd.aliases.includes(commandName)) continue;
 
         commandFound = true
-        const retNumber = cmd.invoke(args, message);
+        const retNumber = cmd.invoke(args, message, botConfig);
         console.log(`The User ${message.author.username} (${message.author.id}) executed the command "${cmd.name}" with this args -> ${args.length > 0 ? args : "[]"}`);
         if (retNumber === 1) {
             bot.destroy();
@@ -136,8 +85,3 @@ bot.on('message', message => {
 process.on('unhandledRejection', error => {
     console.error('Unhandled promise rejection:', error);
 });
-
-
-export function getChannel(id: string) {
-    bot.channels.cache.get
-}

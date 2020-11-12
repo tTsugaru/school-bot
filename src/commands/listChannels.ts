@@ -1,20 +1,45 @@
-import { Message } from "discord.js";
-import { Config, getConfig } from "../main";
+import { Message, MessageEmbed } from "discord.js";
+import { BotConfig } from "../config";
 
-export default function listChannels(args: string[], msg: Message): number {
-    const config: Config = getConfig();
-    if (!config) {
+export default function listChannels(args: string[], msg: Message, botConfig: BotConfig): number {
+    if (!botConfig) {
         msg.channel.send("No bot Config found");
         return;
     }
 
-    config.channels.forEach(async (value, index, _) => {
-        const channel = msg.guild.channels.cache.get(value);
-        if (typeof (channel) === "undefined") return 0;
-        msg.channel.send(`(${index + 1}) -> \`${channel.id} (${channel.name})\``);
-        await delay(1000);
-    })
 
+    if (args.length === 1) {
+        let channelGroups = botConfig.channelGroups;
+        let foundChannelGroup = channelGroups.find(cg => cg.name === args[0]);
+        if (typeof (foundChannelGroup) !== "undefined" && foundChannelGroup.channels.length > 0) {
+            let embedMessage = new MessageEmbed()
+                .setTitle(`**${foundChannelGroup.name}**`)
+                .setDescription(`\`\`\`JSON
+${JSON.stringify(foundChannelGroup.channels, null, 2)}
+\`\`\``)
+                .setColor("RED");
+
+            msg.channel.send(embedMessage);
+        } else {
+            msg.channel.send("This channel group was not found :(");
+        }
+
+
+    } else {
+        let generalChannelGroup = botConfig.generalChannels;
+
+        if (generalChannelGroup.length > 0) {
+            let embedMessage = new MessageEmbed()
+                .setTitle(`**Global Channels**`)
+                .setDescription(`\`\`\`JSON
+${JSON.stringify(generalChannelGroup, null, 2)}
+\`\`\``)
+                .setColor("GOLD");
+
+            msg.channel.send(embedMessage);
+        }
+        return 0;
+    }
 }
 function delay(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
