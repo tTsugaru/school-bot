@@ -1,4 +1,4 @@
-import { Message, TextChannel } from 'discord.js';
+import { Message, MessageEmbed, TextChannel } from 'discord.js';
 import { BotConfig } from '../config';
 
 export default function sendToChannels(args: string[], msg: Message, botConfig: BotConfig): number {
@@ -12,13 +12,29 @@ export default function sendToChannels(args: string[], msg: Message, botConfig: 
         return;
     }
 
-    // TODO: Rewrite to be compatible with new config layout
-    // config.channels.forEach(channelId => {
-    //     const channel = msg.guild.channels.cache.get(channelId);
-    //     if (channel && channel instanceof TextChannel) {
-    //         channel.send(args.join(" ") + "\n `Author: " + msg.author.username + "`");
-    //     } else {
-    //         msg.channel.send("The Channel with the id: " + channelId + " was not found");
-    //     }
-    // });
+    let generalChannels = botConfig.generalChannels;
+    let channelGroups = botConfig.channelGroups;
+
+    if (args.shift() === "general") {
+        generalChannels.forEach(channel => {
+            let foundChannel = msg.guild.channels.cache.find(fc => fc.id === channel.id || fc.name === channel.name);
+            if (typeof foundChannel === "undefined") {
+                return 0;
+            }
+
+            if (foundChannel instanceof TextChannel) {
+                let embededMessage = new MessageEmbed()
+                    .setTitle(`Message from ${msg.author.username}`)
+                    .setDescription(args.join(" "))
+                    .setColor("GOLD");
+
+                foundChannel.send(embededMessage);
+            }
+        });
+    } else {
+        let groupName = args.shift();
+
+
+
+    }
 }
