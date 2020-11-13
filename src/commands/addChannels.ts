@@ -16,7 +16,7 @@ export default function addChannels(args: string[], msg: Message, botConfig: Bot
     let configChannelGroups = botConfig.channelGroups
 
     // TODO: Fix duplicated channels in group
-    if (args.length > 1) {
+    if (args[0] !== "general" && args.length > 1) {
         let groupName = args.shift();
 
         if (configChannelGroups.length == 0) {
@@ -26,7 +26,21 @@ export default function addChannels(args: string[], msg: Message, botConfig: Bot
             if (typeof foundChannelGroup === "undefined") {
                 addChannelsToNewGroup(groupName);
             } else {
-
+                args.forEach(channel => {
+                    let foundChannel = findChannelInGroup(channel, foundChannelGroup);
+                    if (foundChannel === null) {
+                        let channelFromGuild = findChannelInGuild(channel);
+                        if (typeof channelFromGuild !== "undefined") {
+                            foundChannelGroup.channels.push(channelFromGuild);
+                            msg.channel.send(`The channel **${channelFromGuild.name}** was added to the **${foundChannelGroup.name}** channel group.`);
+                        } else {
+                            msg.channel.send("Channel was not found");
+                        }
+                    } else {
+                        msg.channel.send(`The Channel **${foundChannel.name}** was already added to the **${foundChannelGroup.name}** channel group.`);
+                        return 0;
+                    }
+                });
             }
         }
 
@@ -36,8 +50,12 @@ export default function addChannels(args: string[], msg: Message, botConfig: Bot
 
         let foundChannel = findChannelInGuild(args[0]);
         if (foundChannel !== null) {
+            if (botConfig.generalChannels.includes(foundChannel)) {
+                msg.channel.send(`The Channel **${foundChannel.name}**(**${foundChannel.id}**) was already added to the general group.`);
+                return 0;
+            }
             botConfig.generalChannels.push(foundChannel);
-            msg.channel.send(`The Channel ${foundChannel.name}(${foundChannel.id}) was added to the general group.`);
+            msg.channel.send(`The Channel **${foundChannel.name}**(**${foundChannel.id}**) was added to the general group.`);
             updateBotConfig(botConfig);
         }
     }
@@ -53,9 +71,21 @@ export default function addChannels(args: string[], msg: Message, botConfig: Bot
             if (foundChannel !== null) {
                 newChannelGroup.channels.push(foundChannel);
                 configChannelGroups.push(newChannelGroup);
-                msg.channel.send(`The Channel ${foundChannel.name}(${foundChannel.id}) was added to the ${newChannelGroup.name} group.`);
+                msg.channel.send(`The Channel **${foundChannel.name}**(**${foundChannel.id}**) was added to the **${newChannelGroup.name}** group.`);
             }
         });
+    }
+
+    function findChannelInGroup(channelToSearch: string, channelGroup: ChannelGroup): Channel | null {
+        if (!isNaN(Number(channelToSearch)) && Number(channelToSearch) !== 0) {
+            let foundchannel = channelGroup.channels.find(groupChannel => channelToSearch === groupChannel.id);
+            if (typeof foundchannel === "undefined") return null;
+            return foundchannel;
+        } else {
+            let foundchannel = channelGroup.channels.find(groupChannel => channelToSearch === groupChannel.name);
+            if (typeof foundchannel === "undefined") return null;
+            return foundchannel;
+        }
     }
 
     function findChannelInGuild(channelIdOrName: string): Channel | null {
@@ -67,7 +97,7 @@ export default function addChannels(args: string[], msg: Message, botConfig: Bot
                     name: foundChannel.name
                 }
             } else {
-                msg.channel.send(`The Channel ${channelIdOrName} was not found.`);
+                msg.channel.send(`The Channel **${channelIdOrName}** was not found.`);
                 return null;
             }
         } else {
@@ -78,7 +108,7 @@ export default function addChannels(args: string[], msg: Message, botConfig: Bot
                     name: foundChannel.name
                 }
             } else {
-                msg.channel.send(`The Channel ${channelIdOrName} was not found.`);
+                msg.channel.send(`The Channel **${channelIdOrName}** was not found.`);
                 return null;
             }
         }

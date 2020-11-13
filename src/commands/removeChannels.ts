@@ -1,6 +1,5 @@
 import { Message } from "discord.js";
 import { BotConfig, updateBotConfig } from "../config";
-import listChannels from "./listChannels";
 
 export default function removeChannels(args: string[], msg: Message, botConfig: BotConfig): number {
     if (args.length <= 0) {
@@ -14,8 +13,9 @@ export default function removeChannels(args: string[], msg: Message, botConfig: 
     }
 
     let configChannelGroups = botConfig.channelGroups;
+    let generalChannels = botConfig.generalChannels;
 
-    if (args.length === 1) {
+    if (args[0] !== "general" && args.length === 1) {
 
         let foundChannelGroup = configChannelGroups.find(channelGroup => channelGroup.name === args[0]);
         if (typeof foundChannelGroup === "undefined") {
@@ -28,6 +28,29 @@ export default function removeChannels(args: string[], msg: Message, botConfig: 
             updateBotConfig(botConfig);
             msg.channel.send(`The Channel group ${foundChannelGroup.name} was succsessfully deleted with all its channels.`);
         }
+    } else if (args[0] === "general") {
+        args.shift();
+
+        if (args.length > 1) {
+            args.forEach(arg => {
+                let foundChannelToDelete = generalChannels.find(channel => channel.id === arg || channel.name === arg);
+                if (typeof foundChannelToDelete === "undefined") {
+                    msg.channel.send("This channel was not found in the general channels.");
+                    return 0;
+                }
+
+                let indexOfChannelToDelete = generalChannels.indexOf(foundChannelToDelete, 0);
+                generalChannels.splice(indexOfChannelToDelete, 1);
+                msg.channel.send(`The channel **${foundChannelToDelete.name}**(**${foundChannelToDelete.id}**) was succsessfully deleted from the **general** channel group.`);
+
+            });
+            updateBotConfig(botConfig);
+        } else {
+            botConfig.generalChannels = [];
+            updateBotConfig(botConfig);
+            msg.channel.send("Deleted all channels from the **general** channel group");
+        }
+
     } else {
         let groupName = args.shift();
         let foundChannelGroup = configChannelGroups.find(channelGroup => channelGroup.name === groupName);

@@ -12,10 +12,12 @@ export default function sendToChannels(args: string[], msg: Message, botConfig: 
         return;
     }
 
+    let firstArg = args.shift()
+
     let generalChannels = botConfig.generalChannels;
     let channelGroups = botConfig.channelGroups;
 
-    if (args.shift() === "general") {
+    if (firstArg === "general") {
         generalChannels.forEach(channel => {
             let foundChannel = msg.guild.channels.cache.find(fc => fc.id === channel.id || fc.name === channel.name);
             if (typeof foundChannel === "undefined") {
@@ -23,18 +25,36 @@ export default function sendToChannels(args: string[], msg: Message, botConfig: 
             }
 
             if (foundChannel instanceof TextChannel) {
-                let embededMessage = new MessageEmbed()
-                    .setTitle(`Message from ${msg.author.username}`)
-                    .setDescription(args.join(" "))
-                    .setColor("GOLD");
-
-                foundChannel.send(embededMessage);
+                sendMessage(foundChannel);
             }
         });
     } else {
-        let groupName = args.shift();
+        let foundChannelGroup = channelGroups.find(channelGroup => channelGroup.name === firstArg);
+        if (typeof foundChannelGroup === "undefined") {
+            msg.channel.send(`The channel group **${firstArg}** was not found.`);
+            return 0;
+        }
 
+        if (foundChannelGroup.channels.length > 0) {
+            foundChannelGroup.channels.forEach(channel => {
+                let foundChannel = msg.guild.channels.cache.find(fc => fc.id === channel.id || fc.name === channel.name);
+                if (typeof foundChannel === "undefined") {
+                    return 0;
+                }
 
+                if (foundChannel instanceof TextChannel) {
+                    sendMessage(foundChannel);
+                }
+            });
+        }
+    }
 
+    function sendMessage(channelToSendTo: TextChannel) {
+        let embededMessage = new MessageEmbed()
+            .setTitle(`Message from ${msg.author.username}`)
+            .setDescription(args.join(" "))
+            .setColor("GOLD");
+
+        channelToSendTo.send(embededMessage);
     }
 }
