@@ -9,6 +9,12 @@ export default function listChannels(args: string[], msg: Message, botConfig: Bo
 
 
     if (args.length === 1) {
+
+        if (args[0] === "general") {
+            listGeneralChannels();
+            return 0;
+        }
+
         let channelGroups = botConfig.channelGroups;
         let foundChannelGroup = channelGroups.find(cg => cg.name === args[0]);
         if (typeof (foundChannelGroup) !== "undefined" && foundChannelGroup.channels.length > 0) {
@@ -26,6 +32,10 @@ ${JSON.stringify(foundChannelGroup.channels, null, 2)}
 
 
     } else {
+        listGeneralChannels();
+    }
+
+    function listGeneralChannels() {
         let generalChannelGroup = botConfig.generalChannels;
 
         if (generalChannelGroup.length > 0) {

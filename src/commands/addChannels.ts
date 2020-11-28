@@ -1,5 +1,4 @@
 import { Message } from 'discord.js';
-import { type } from 'os';
 import { BotConfig, Channel, ChannelGroup, getBotConfig, updateBotConfig } from '../config';
 
 export default function addChannels(args: string[], msg: Message, botConfig: BotConfig): number {
@@ -16,15 +15,23 @@ export default function addChannels(args: string[], msg: Message, botConfig: Bot
     let configChannelGroups = botConfig.channelGroups
 
     // TODO: Fix duplicated channels in group
-    if (args[0] !== "general" && args.length > 1) {
+    if (args[0] !== "general" && isNaN(Number(args[0])) && args.length > 1) {
         let groupName = args.shift();
 
         if (configChannelGroups.length == 0) {
-            addChannelsToNewGroup(groupName);
+            if (isNaN(Number(groupName))) {
+                addChannelsToNewGroup(groupName);
+            } else {
+                msg.channel.send("The channel group name cannot be a number.")
+            }
         } else {
             let foundChannelGroup = configChannelGroups.find(channelGroup => channelGroup.name === groupName);
             if (typeof foundChannelGroup === "undefined") {
-                addChannelsToNewGroup(groupName);
+                if (isNaN(Number(groupName))) {
+                    addChannelsToNewGroup(groupName);
+                } else {
+                    msg.channel.send("The channel group name cannot be a number.")
+                }
             } else {
                 args.forEach(channel => {
                     let foundChannel = findChannelInGroup(channel, foundChannelGroup);
@@ -41,6 +48,7 @@ export default function addChannels(args: string[], msg: Message, botConfig: Bot
                         return 0;
                     }
                 });
+
             }
         }
 
@@ -48,16 +56,23 @@ export default function addChannels(args: string[], msg: Message, botConfig: Bot
         updateBotConfig(botConfig);
     } else {
 
-        let foundChannel = findChannelInGuild(args[0]);
-        if (foundChannel !== null) {
-            if (botConfig.generalChannels.includes(foundChannel)) {
-                msg.channel.send(`The Channel **${foundChannel.name}**(**${foundChannel.id}**) was already added to the general group.`);
-                return 0;
+        console.log(botConfig.generalChannels);
+
+        args.forEach(arg => {
+            let foundChannel = findChannelInGuild(arg);
+            if (typeof foundChannel !== "undefined") {
+                let foundChannelInGroup = botConfig.generalChannels.find(fc => fc.name === foundChannel.name)
+                if (typeof foundChannelInGroup !== "undefined") {
+                    msg.channel.send(`The Channel **${foundChannel.name}**(**${foundChannel.id}**) was already added to the general group.`);
+                    return 0;
+                }
+                botConfig.generalChannels.push(foundChannel);
+                msg.channel.send(`The Channel **${foundChannel.name}**(**${foundChannel.id}**) was added to the general group.`);
+                updateBotConfig(botConfig);
+            } else {
+                msg.channel.send("Channel was not Found.");
             }
-            botConfig.generalChannels.push(foundChannel);
-            msg.channel.send(`The Channel **${foundChannel.name}**(**${foundChannel.id}**) was added to the general group.`);
-            updateBotConfig(botConfig);
-        }
+        });
     }
 
     function addChannelsToNewGroup(groupName: string) {
