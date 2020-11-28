@@ -51,8 +51,7 @@ export default function sendToChannels(args: string[], msg: Message, botConfig: 
 
     function sendMessage(channelToSendTo: TextChannel) {
         let embededMessage = new MessageEmbed()
-            .setTitle(`Message from ${msg.author.username}`)
-            .setDescription(args.join(" "))
+            .setDescription(args.join(" ") + `\n\n **From ${msg.author.toString()}**`)
             .setColor("GOLD");
 
         channelToSendTo.send(embededMessage);

@@ -47,6 +47,8 @@ ${JSON.stringify(generalChannelGroup, null, 2)}
                 .setColor("GOLD");
 
             msg.channel.send(embedMessage);
+        } else {
+            msg.channel.send("No channels in the general Channel group.");
         }
         return 0;
     }

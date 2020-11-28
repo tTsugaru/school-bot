@@ -31,6 +31,11 @@ export default function removeChannels(args: string[], msg: Message, botConfig: 
     } else if (args[0] === "general") {
         args.shift();
 
+        if (generalChannels.length <= 0) {
+            msg.channel.send("No channel to delete.");
+            return 0;
+        }
+
         if (args.length > 1) {
             args.forEach(arg => {
                 let foundChannelToDelete = generalChannels.find(channel => channel.id === arg || channel.name === arg);

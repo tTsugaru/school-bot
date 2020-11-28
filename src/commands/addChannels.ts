@@ -55,9 +55,7 @@ export default function addChannels(args: string[], msg: Message, botConfig: Bot
         botConfig.channelGroups = configChannelGroups;
         updateBotConfig(botConfig);
     } else {
-
-        console.log(botConfig.generalChannels);
-
+        args.shift();
         args.forEach(arg => {
             let foundChannel = findChannelInGuild(arg);
             if (typeof foundChannel !== "undefined") {
