@@ -1,5 +1,5 @@
 import { Message } from "discord.js";
-import { BotConfig, updateBotConfig } from "../config";
+import { BotConfig, getConfig, updateBotConfig } from "../config";
 
 export default function removeChannels(args: string[], msg: Message, botConfig: BotConfig): number {
     if (args.length <= 0) {
@@ -81,3 +81,9 @@ export default function removeChannels(args: string[], msg: Message, botConfig: 
 
     return 0;
 }
+const config = getConfig();
+export const removeDescription: string = `Removes a channel (or all channel) from the given group.\n
+\n - \`${config.prefix}remove <channel_id / name>\` - Removes a channel from the general group.
+\n - \`${config.prefix}remove general\` - Removes all channel from the general channel group.
+\n - \`${config.prefix}remove <groupname>\` - Removes all channel from the given group.
+\n - \`${config.prefix}remove <groupname> [channel_id / name]\` - Removes one or more channel of the given group.`

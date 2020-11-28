@@ -1,5 +1,5 @@
 import { Message, MessageEmbed } from "discord.js";
-import { BotConfig } from "../config";
+import { BotConfig, getConfig } from "../config";
 
 export default function listChannels(args: string[], msg: Message, botConfig: BotConfig): number {
     if (!botConfig) {
@@ -56,3 +56,4 @@ ${JSON.stringify(generalChannelGroup, null, 2)}
 function delay(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
+export const listDescription: string = `Lists the given group or general group.\n **Usage:** \n - \`${getConfig().prefix}list general/<groupname>\``

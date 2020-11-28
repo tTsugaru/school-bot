@@ -1,14 +1,17 @@
 import { Message } from 'discord.js';
-import addChannels from './commands/addChannels';
-import listChannels from './commands/listChannels';
-import removeChannels from './commands/removeChannels';
-import sendToChannels from './commands/sendToChannels';
+import addChannels, { addChanneldescription } from './commands/addChannels';
+import help from './commands/help';
+import listChannels, { listDescription } from './commands/listChannels';
+import removeChannels, { removeDescription } from './commands/removeChannels';
+import sendToChannels, { sendDescription } from './commands/sendToChannels';
 import { BotConfig } from './config';
 
 export default class Command {
 
-    constructor(readonly name: string, readonly aliases: string[], readonly func: (args: string[], msg: Message, botConfig: BotConfig) => number) {
-        //EMPTY....
+    public description: string;
+
+    constructor(readonly name: string, desc: string, readonly aliases: string[], readonly func: (args: string[], msg: Message, botConfig: BotConfig) => number) {
+        this.description = desc;
     }
 
     invoke(args: string[], msg: Message, botConfig: BotConfig): number {
@@ -18,9 +21,12 @@ export default class Command {
     }
 }
 
+
+
 export const commands = [
-    new Command("addChannels", ["ac", "add"], addChannels),
-    new Command("sendToChannels", ["stc", "send"], sendToChannels),
-    new Command("removeChannels", ["rc", "remove"], removeChannels),
-    new Command("listChannels", ["lc", "ls", "list"], listChannels)
+    new Command("addChannels", addChanneldescription, ["ac", "add"], addChannels),
+    new Command("sendToChannels", sendDescription, ["stc", "send"], sendToChannels),
+    new Command("removeChannels", removeDescription, ["rc", "remove"], removeChannels),
+    new Command("listChannels", listDescription, ["lc", "ls", "list"], listChannels),
+    new Command("help", "", ["h", "i", "info"], help)
 ];

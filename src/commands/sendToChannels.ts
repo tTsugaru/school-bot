@@ -1,5 +1,5 @@
 import { Message, MessageEmbed, TextChannel } from 'discord.js';
-import { BotConfig } from '../config';
+import { BotConfig, getConfig } from '../config';
 
 export default function sendToChannels(args: string[], msg: Message, botConfig: BotConfig): number {
     if (args.length <= 0) {
@@ -57,3 +57,8 @@ export default function sendToChannels(args: string[], msg: Message, botConfig: 
         channelToSendTo.send(embededMessage);
     }
 }
+const config = getConfig();
+export const sendDescription: string = `Sends a Text to the given group.\n
+\n - \`send general <text>\` - Sends a text to all channel from the general group.
+\n - \`send <groupname><text>\` - Sends a text to all channels from the given group.
+`

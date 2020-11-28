@@ -1,5 +1,5 @@
 import { Message } from 'discord.js';
-import { BotConfig, Channel, ChannelGroup, getBotConfig, updateBotConfig } from '../config';
+import { BotConfig, Channel, ChannelGroup, getBotConfig, getConfig, updateBotConfig } from '../config';
 
 export default function addChannels(args: string[], msg: Message, botConfig: BotConfig): number {
     if (args.length <= 0 || (args.length === 1 && typeof args[1] === "undefined")) {
@@ -130,3 +130,10 @@ export default function addChannels(args: string[], msg: Message, botConfig: Bot
 
     return 0;
 }
+const config = getConfig();
+export const addChanneldescription: string = "Adds a channel to the given group or to the general group. " +
+    "\nUsage: " +
+    "\n " +
+    ` - \`${config.prefix}add <channel_id / name>\` - Adds a channel to the general Channelgroup.\n` +
+    ` - \`${config.prefix}add general [channel_id / name]\` - Multiple channels can be added to the general group.\n` +
+    ` - \`${config.prefix}add <groupname> [channel_id / name]\` - Adds a channel to the given group / Multiple channels can be added.\n`;
