@@ -2,7 +2,7 @@ import { Message } from 'discord.js';
 import { BotConfig, Channel, ChannelGroup, getBotConfig, updateBotConfig } from '../config';
 
 export default function addChannels(args: string[], msg: Message, botConfig: BotConfig): number {
-    if (args.length <= 0) {
+    if (args.length <= 0 || (args.length === 1 && typeof args[1] === "undefined")) {
         msg.channel.send("Please specify a channel/group to add");
         return;
     }
