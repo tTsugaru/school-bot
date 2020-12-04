@@ -59,7 +59,7 @@ export default function addChannels(args: string[], msg: Message, botConfig: Bot
         args.forEach(arg => {
             let foundChannel = findChannelInGuild(arg);
             if (typeof foundChannel !== "undefined") {
-                let foundChannelInGroup = botConfig.generalChannels.find(fc => fc.name === foundChannel.name)
+                let foundChannelInGroup = botConfig.generalChannels.find(fc => fc.id === foundChannel.id)
                 if (typeof foundChannelInGroup !== "undefined") {
                     msg.channel.send(`The Channel **${foundChannel.name}**(**${foundChannel.id}**) was already added to the general group.`);
                     return 0;

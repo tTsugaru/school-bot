@@ -19,7 +19,7 @@ export default function sendToChannels(args: string[], msg: Message, botConfig: 
 
     if (firstArg === "general") {
         generalChannels.forEach(channel => {
-            let foundChannel = msg.guild.channels.cache.find(fc => fc.id === channel.id || fc.name === channel.name);
+            let foundChannel = msg.guild.channels.cache.find(fc => fc.id === channel.id);
             if (typeof foundChannel === "undefined") {
                 return 0;
             }
@@ -37,7 +37,7 @@ export default function sendToChannels(args: string[], msg: Message, botConfig: 
 
         if (foundChannelGroup.channels.length > 0) {
             foundChannelGroup.channels.forEach(channel => {
-                let foundChannel = msg.guild.channels.cache.find(fc => fc.id === channel.id || fc.name === channel.name);
+                let foundChannel = msg.guild.channels.cache.find(fc => fc.id === channel.id);
                 if (typeof foundChannel === "undefined") {
                     return 0;
                 }

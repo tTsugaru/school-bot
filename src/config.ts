@@ -52,7 +52,7 @@ export function getConfig(): Config | null {
         return loadedConfig ? loadedConfig : null;
     } catch {
         console.log("No Config was Found need to be created.")
-        return null;
+        return createConfig();
     }
 }
 
