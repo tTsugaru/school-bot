@@ -42,6 +42,7 @@ The Prefix must be defined in the Config of the Bot!
 * Send
   * `send general <text>` - Sends a text to all channel from the general group.
   * `send <groupname> <text>` - Sends a text to all channels from the given group.
+  * If you attach an image to a message it will be sent with the message
 
 
 ## License
