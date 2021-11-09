@@ -16,8 +16,8 @@ function startBot() {
         console.log(loadedConfig);
         exit(0);
     } else if (loadedConfig === undefined) {
-        console.log(loadedConfig);
         console.log("Please setup config");
+        console.log(loadedConfig);
         exit(0);
     }
     config = loadedConfig
@@ -55,13 +55,10 @@ bot.on('message', message => {
         return;
     }
     botConfig = getBotConfig();
-    console.log(botConfig);
 
     let args = message.content.slice(config.prefix.length).trim().split(/ +/s);
     let commandName = args.shift();
     if (!commandName) return;
-
-    console.log(args, commandName);
 
     let commandFound = false;
     for (const cmd of commands) {

@@ -25,7 +25,7 @@ export default function sendToChannels(args: string[], msg: Message, botConfig: 
             }
 
             if (foundChannel instanceof TextChannel) {
-                sendMessage(foundChannel);
+                sendMessage(foundChannel, msg);
             }
         });
     } else {
@@ -43,17 +43,30 @@ export default function sendToChannels(args: string[], msg: Message, botConfig: 
                 }
 
                 if (foundChannel instanceof TextChannel) {
-                    sendMessage(foundChannel);
+                    sendMessage(foundChannel, msg);
                 }
             });
         }
     }
 
-    function sendMessage(channelToSendTo: TextChannel) {
+    function sendMessage(channelToSendTo: TextChannel, msg: Message) {
+        msg.attachments.forEach(test => {
+            console.log(test.url);
+        });
         let embededMessage = new MessageEmbed()
-            .setDescription(args.join(" ") + `\n\n **From ${msg.author.toString()}**`)
-            .setColor("GOLD");
 
+        if (msg.attachments.size > 0) {
+            embededMessage
+                .setDescription(args.join(" "))
+                .setFooter(`From ${msg.author.username}`, msg.author.displayAvatarURL())
+                .setImage(msg.attachments.first().url)
+                .setColor("GOLD");
+        } else {
+            embededMessage
+                .setDescription(args.join(" "))
+                .setFooter(`From ${msg.author.username}`, msg.author.displayAvatarURL())
+                .setColor("GOLD");
+        }
         channelToSendTo.send(embededMessage);
     }
 }
